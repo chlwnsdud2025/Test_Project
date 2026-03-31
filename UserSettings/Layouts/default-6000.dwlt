@@ -197,7 +197,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 112}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 154
+  controlID: 146
   draggingID: 0
 --- !u!114 &9
 MonoBehaviour:
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 50
+  controlID: 100
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -452,8 +452,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "UnityEditor.MainToolbarWindow\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1
-    y: 51
+    x: -32000
+    y: -32000
     width: 1918
     height: 36
   m_SerializedDataModeController:
@@ -718,8 +718,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Game\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 942
-    y: 87
+    x: -31059
+    y: -31964
     width: 655
     height: 565
   m_SerializedDataModeController:
@@ -821,8 +821,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Hierarchy\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1
-    y: 87
+    x: -32000
+    y: -31964
     width: 140
     height: 565
   m_SerializedDataModeController:
@@ -842,11 +842,11 @@ MonoBehaviour:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs:
-      - m_Data: 45968
+      - m_Data: 47910
       m_LastClickedID:
         m_Data: 0
       m_ExpandedIDs:
-      - m_Data: -1300
+      - m_Data: -132942
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -893,8 +893,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 142
-    y: 87
+    x: -31859
+    y: -31964
     width: 798
     height: 565
   m_SerializedDataModeController:
@@ -1464,8 +1464,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Project\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 356
-    y: 678
+    x: -31645
+    y: -31373
     width: 1241
     height: 315
   m_SerializedDataModeController:
@@ -1504,26 +1504,26 @@ MonoBehaviour:
   m_LastFolders:
   - Assets
   m_LastFoldersGridSize: 16
-  m_LastProjectPath: C:\Unity_Projects\Test_Project
+  m_LastProjectPath: C:\Git_Projects\Test_Project
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs:
-    - m_Data: 46698
+    - m_Data: 56870
     m_LastClickedID:
-      m_Data: 46698
+      m_Data: 56870
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 46698
-    - m_Data: 46700
-    - m_Data: 46702
-    - m_Data: 46704
-    - m_Data: 46706
-    - m_Data: 46708
-    - m_Data: 46710
-    - m_Data: 46712
+    - m_Data: 56870
+    - m_Data: 56872
+    - m_Data: 56874
+    - m_Data: 56876
+    - m_Data: 56878
+    - m_Data: 56880
+    - m_Data: 56882
+    - m_Data: 56884
     - m_Data: 1000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1557,14 +1557,14 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 46698
-    - m_Data: 46700
-    - m_Data: 46702
-    - m_Data: 46704
-    - m_Data: 46706
-    - m_Data: 46708
-    - m_Data: 46710
-    - m_Data: 46712
+    - m_Data: 56870
+    - m_Data: 56872
+    - m_Data: 56874
+    - m_Data: 56876
+    - m_Data: 56878
+    - m_Data: 56880
+    - m_Data: 56882
+    - m_Data: 56884
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1592,8 +1592,8 @@ MonoBehaviour:
       m_ResourceFile: 
   m_ListAreaState:
     m_SelectedInstanceIDs:
-    - m_Data: 45968
-    m_LastClickedInstanceID: 45968
+    - m_Data: 47910
+    m_LastClickedInstanceID: 47910
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs:
     - m_Data: 49160
@@ -1647,8 +1647,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Console\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1
-    y: 678
+    x: -32000
+    y: -31373
     width: 354
     height: 315
   m_SerializedDataModeController:
@@ -1685,8 +1685,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1599
-    y: 87
+    x: -30402
+    y: -31964
     width: 319
     height: 906
   m_SerializedDataModeController:
