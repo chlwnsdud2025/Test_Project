@@ -12,10 +12,9 @@ public class DodgeState : PlayerBaseState
     {
         Debug.Log("상태: Dash");
         timer = 0f;
-        // 실제로는 여기서 순간적인 힘(AddForce)을 가하거나 속도를 높입니다.
         player.animator.applyRootMotion = true;
-        //player.animator.CrossFadeInFixedTime(dodgeAnimHash, 0.1f);
-        player.animator.Play(dodgeAnimHash, -1, 0.1f);
+        player.animator.CrossFade(dodgeAnimHash, 0.05f);
+
     }
 
     public override void Update()

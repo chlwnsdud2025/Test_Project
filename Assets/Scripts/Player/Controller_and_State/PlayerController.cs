@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     // 입력 시스템
     private InputSystem_Actions controls;
     [HideInInspector] public Vector2 moveInput;
+    [HideInInspector] public Vector2 mouseMoveInput;
+
 
     [Header("Look Settings")]
     public float mouseSensitivity = 10f; // 마우스 감도
@@ -55,6 +57,8 @@ public class PlayerController : MonoBehaviour
     {
         // 매 프레임 입력값 읽기
         moveInput = controls.PlayerMovement.Move.ReadValue<Vector2>();
+        mouseMoveInput = controls.PlayerMovement.Look.ReadValue<Vector2>();
+
 
         // 상태 머신 실행
         stateMachine.Update();
