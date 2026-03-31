@@ -86,7 +86,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Dodge
+  m_Name: Roll
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -99,7 +99,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 0eb6d1fd9485b67499f4e5b478f47719, type: 2}
+  m_Motion: {fileID: 7400000, guid: eb1a1cd4ec907534fa6f817daacbe578, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

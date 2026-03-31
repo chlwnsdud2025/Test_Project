@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DodgeState : PlayerBaseState
 {
-    private readonly int dodgeAnimHash = Animator.StringToHash("Dodge");
+    private readonly int dodgeAnimHash = Animator.StringToHash("Roll");
     private float timer;
     private float duration = 0.8f;
 
@@ -10,7 +10,7 @@ public class DodgeState : PlayerBaseState
 
     public override void Enter()
     {
-        Debug.Log("상태: Dash");
+        Debug.Log("상태: Roll");
         timer = 0f;
         player.animator.applyRootMotion = true;
         player.animator.CrossFade(dodgeAnimHash, 0.05f);
