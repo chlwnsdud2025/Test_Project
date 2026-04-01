@@ -7,7 +7,7 @@ public class IdleState : PlayerBaseState
 
     public override void Enter() { 
         Debug.Log("ป๓ลย: Idle");
-        player.animator.CrossFade(idleAnimHash, 0.1f);
+        player.animator.CrossFade(idleAnimHash, 0.05f);
     }
 
     public override void Update()
