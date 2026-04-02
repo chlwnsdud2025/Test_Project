@@ -223,6 +223,10 @@ MonoBehaviour:
   mouseSensitivity: 10
   cameraTransform: {fileID: 330585546}
   animator: {fileID: 79134503}
+  currentWeapon: {fileID: 11400000, guid: 58a625f376515e64caca8cc6ce1eacc2, type: 2}
+  canCombo: 0
+  canNextAttack: 0
+  canCancel: 0
 --- !u!95 &79134503
 Animator:
   serializedVersion: 7

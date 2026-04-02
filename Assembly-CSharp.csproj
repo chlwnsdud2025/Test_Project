@@ -64,7 +64,9 @@
     <Compile Include="Assets\Scripts\Player\Controller_and_State\MoveState.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\AttackState.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
+    <Compile Include="Assets\Scripts\ScriptableObject\weapon_1_ob.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\IdleState.cs" />
+    <Compile Include="Assets\Scripts\Player\Controller_and_State\AttackBehaviour.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\StateMachine.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\DeadState.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\DodgeState.cs" />

@@ -18,6 +18,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Components")]
     public Animator animator;
+    private Rigidbody rb;
+    //무기 교체
+    public weapon_1_ob currentWeapon;
+
+    private AnimatorOverrideController overrideController;
+
+    [HideInInspector] public bool canCombo;      // 현재 클릭 시 예약 가능 여부
+    [HideInInspector] public bool canNextAttack; // 실제 다음 애니메이션 전환 가능 시점
+    [HideInInspector] public bool canCancel;     // 이동/회피로 캔슬 가능 여부
 
     // 핵심: 분리된 상태 머신 객체
     public StateMachine stateMachine { get; private set; }
@@ -44,11 +53,15 @@ public class PlayerController : MonoBehaviour
         controls.PlayerMovement.Attack.performed += ctx => stateMachine.CurrentState.OnAttackInput();
 
         // (만약 Dash 액션을 만드셨다면 아래처럼 연결합니다)
-         controls.PlayerMovement.Dodge.performed += ctx => stateMachine.CurrentState.OnDashInput();
+        controls.PlayerMovement.Dodge.performed += ctx => stateMachine.CurrentState.OnDashInput();
+
+        overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
+        animator.runtimeAnimatorController = overrideController;
     }
 
     private void Start()
     {
+        if (currentWeapon != null) EquipWeapon(currentWeapon);
         // 게임 시작 시 초기 상태 지정
         stateMachine.Initialize(idleState);
     }
@@ -64,7 +77,26 @@ public class PlayerController : MonoBehaviour
         stateMachine.Update();
     }
 
-    
+    public void EquipWeapon(weapon_1_ob newData)
+    {
+        currentWeapon = newData;
+
+        // 무기 데이터에 있는 클립들을 애니메이터 노드에 매핑
+        // "Attack1"이라는 노드 이름을 실제 파일(newData.comboClips[0])로 교체
+        for (int i = 0; i < newData.comboClips.Length; i++)
+        {
+            overrideController[$"Attack{i + 1}"] = newData.comboClips[i];
+        }
+    }
+
+    public void ResetVelocity()
+    {
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+    }
 
     private void OnEnable() { controls.Enable(); }
     private void OnDisable() { controls.Disable(); }

@@ -2,83 +2,66 @@ using UnityEngine;
 
 public class AttackState : PlayerBaseState
 {
-    private readonly int attackAnimHash = Animator.StringToHash("Attack");
-    private readonly int attack2AnimHash = Animator.StringToHash("Attack2");
-
-    private bool comboInputReceived = false; // 콤보 입력 여부 저장
+    private int comboIndex = 0;
+    private bool comboInputReceived = false;
 
     public AttackState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) { }
 
     public override void Enter()
     {
-        Debug.Log("상태: Attack1");
         comboInputReceived = false;
         player.animator.applyRootMotion = true;
 
-        player.animator.CrossFadeInFixedTime(attackAnimHash, 0.1f);
+        // "Attack1", "Attack2" 등의 이름으로 재생 (OverrideController에 의해 실제 Clip이 재생됨)
+        string stateName = $"Attack{comboIndex + 1}";
+        player.animator.CrossFadeInFixedTime(stateName, 0.1f);
     }
 
     public override void Update()
     {
+        // 1. 콤보 전환 로직
+        if (comboInputReceived && player.canNextAttack)
+        {
+            // 다음 타수가 있는지 무기 데이터 확인
+            if (comboIndex + 1 < player.currentWeapon.comboClips.Length)
+            {
+                comboIndex++;
+                stateMachine.ChangeState(this); // 자기 자신으로 재진입 (Enter 호출)
+                return;
+            }
+        }
+
+        // 2. 이동 캔슬 로직
+        if (player.moveInput != Vector2.zero && player.canCancel)
+        {
+            comboIndex = 0; // 콤보 초기화
+            stateMachine.ChangeState(player.moveState);
+            return;
+        }
+
+        // 3. 자연 종료 (애니메이션 완료)
         AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
-
-        if (stateInfo.shortNameHash == attackAnimHash && !player.animator.IsInTransition(0))
+        if (!player.animator.IsInTransition(0) && stateInfo.normalizedTime >= 0.95f)
         {
-            float progress = stateInfo.normalizedTime;
-
-            // --- 핵심: 콤보 전환 로직 ---
-            // 입력은 OnAttackInput에서 미리 받아두고(comboInputReceived),
-            // 실제 전환은 애니메이션이 최소 0.6f(타격 이후)만큼은 재생되었을 때 수행함
-            if (progress >= 0.7f && progress <= 0.8f)
-            {
-                if (comboInputReceived)
-                {
-                    Debug.Log("공격2!");
-                    //stateMachine.ChangeState(player.);
-                    return;
-                }
-            }
-
-            // --- 이동 캔슬 로직 (콤보보다 뒤에 배치) ---
-            if (progress >= 0.5f && progress < 0.95f)
-            {
-                if (player.moveInput != Vector2.zero)
-                {
-                    stateMachine.ChangeState(player.moveState);
-                    return;
-                }
-            }
-
-            // --- 자연 종료 ---
-            if (progress >= 0.95f)
-            {
-                stateMachine.ChangeState(player.idleState);
-            }
-        }
-    }
-    public override void Exit()
-    {
-        player.animator.applyRootMotion = false;
-
-        if (player.TryGetComponent(out Rigidbody rb))
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            comboIndex = 0;
+            stateMachine.ChangeState(player.idleState);
         }
     }
 
-    // 공격 중 공격 버튼을 눌렀을 때 처리
     public override void OnAttackInput()
     {
-        AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
-        float progress = stateInfo.normalizedTime;
-
-        // 0.2f부터 0.7f 사이에 클릭했다면 "예약"만 해둠
-        if (progress >= 0.2f && progress <= 0.8f)
+        // 비헤이비어가 허용한 구간에서만 입력 예약
+        if (player.canCombo)
         {
             comboInputReceived = true;
-            Debug.Log("다음 콤보 예약됨!");
+            Debug.Log($"{comboIndex + 1}타 중 다음 콤보 예약됨!");
         }
+    }
+
+    public override void Exit()
+    {
+        // 상태를 완전히 빠져나갈 때 (공격이 끝났을 때)만 초기화되지 않도록 주의
+        // (자기 자신으로 재진입할 때는 Index를 유지해야 함)
     }
     public override void OnDashInput() { /* 무시 */ }
 }

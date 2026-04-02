@@ -32,7 +32,7 @@ public abstract class PlayerBaseState
             // 입력한 방향(moveInput)을 바라보도록 부드럽게 회전시키는 로직
             Vector3 targetDirection = new Vector3(player.moveInput.x, 0f, player.moveInput.y);
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 10f * Time.deltaTime);
+            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 30f * Time.deltaTime);
         }
     }
 
