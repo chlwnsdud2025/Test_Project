@@ -20,9 +20,19 @@ public class MoveState : PlayerBaseState
             return;
         }
 
-        HandleRotation();
+        Vector3 camForward = player.cameraTransform.forward;
+        Vector3 camRight = player.cameraTransform.right;
+        camForward.y = 0f;
+        camRight.y = 0f;
 
-        Vector3 moveDir = new Vector3(player.moveInput.x, 0f, player.moveInput.y);
-        player.transform.Translate(moveDir * player.moveSpeed * Time.deltaTime, Space.World);
+        camForward.Normalize();
+        camRight.Normalize();
+
+        Vector3 move1 = camRight * player.moveInput.x + camForward * player.moveInput.y;
+
+        player.characterController.Move(move1 * player.moveSpeed * Time.deltaTime);
     }
+
+
 }
+

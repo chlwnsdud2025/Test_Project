@@ -5,7 +5,7 @@ public class AttackBehaviour : StateMachineBehaviour
     [Header("타이밍 설정 (0.0 ~ 1.0)")]
     public float comboWindowStart = 0.2f;
     public float comboWindowEnd = 0.7f;
-    public float comboTransitionPoint = 0.6f; // 실제 다음 공격으로 넘어가는 시점
+    public float comboTransitionPoint = 0.6f;
     public float cancelWindowStart = 0.7f;
 
     private PlayerController player;
@@ -14,7 +14,6 @@ public class AttackBehaviour : StateMachineBehaviour
     {
         if (player == null) player = animator.GetComponent<PlayerController>();
 
-        // 상태 진입 시 플래그 초기화
         player.canCombo = false;
         player.canNextAttack = false;
         player.canCancel = false;
@@ -24,15 +23,21 @@ public class AttackBehaviour : StateMachineBehaviour
     {
         if (player == null) return;
 
+        //  [핵심 해결] 애니메이션이 서로 섞이는 트랜지션 구간에서는
+        // 이전 애니메이션의 찌꺼기 값이 플래그를 망치지 못하게 강제로 0기화하고 리턴시킵니다.
+        if (animator.IsInTransition(layerIndex))
+        {
+            player.canCombo = false;
+            player.canNextAttack = false;
+            player.canCancel = false;
+            return;
+        }
+
         float progress = stateInfo.normalizedTime;
 
-        // 1. 콤보 입력 가능 구간 (입력 버퍼링용)
+        // 트랜지션이 완전히 끝나고 현재 애니메이션이 온전히 재생 중일 때만 판정
         player.canCombo = (progress >= comboWindowStart && progress <= comboWindowEnd);
-
-        // 2. 실제 다음 공격으로 전환 가능한 시점
         player.canNextAttack = (progress >= comboTransitionPoint);
-
-        // 3. 이동/구르기 캔슬 가능 구간
         player.canCancel = (progress >= cancelWindowStart);
     }
 
@@ -40,13 +45,8 @@ public class AttackBehaviour : StateMachineBehaviour
     {
         if (player == null) return;
 
-        // 애니메이션이 끝나거나 끊길 때 안전하게 초기화
         player.canCombo = false;
         player.canNextAttack = false;
         player.canCancel = false;
-
-        // Root Motion 및 물리 초기화 (필요 시)
-        player.animator.applyRootMotion = false;
-        player.ResetVelocity();
     }
 }

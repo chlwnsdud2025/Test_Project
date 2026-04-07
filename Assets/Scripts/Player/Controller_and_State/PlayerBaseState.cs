@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class PlayerBaseState
@@ -25,14 +26,25 @@ public abstract class PlayerBaseState
         stateMachine.ChangeState(player.dashState);
     }
 
+   
+
+    //  부모의 회전 함수를 3D 액션(카메라 기준)에 맞게 덮어씁니다.
     protected virtual void HandleRotation()
     {
         if (player.moveInput != Vector2.zero)
         {
-            // 입력한 방향(moveInput)을 바라보도록 부드럽게 회전시키는 로직
-            Vector3 targetDirection = new Vector3(player.moveInput.x, 0f, player.moveInput.y);
-            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 30f * Time.deltaTime);
+            Vector3 camForward = player.cameraTransform.forward;
+            Vector3 camRight = player.cameraTransform.right;
+            camForward.y = 0f;
+            camRight.y = 0f;
+
+            Vector3 moveDir = (camRight * player.moveInput.x + camForward * player.moveInput.y).normalized;
+
+            if (moveDir != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(moveDir);
+                player.model.transform.rotation = Quaternion.Slerp(player.model.transform.rotation, targetRotation, 10f * Time.deltaTime);
+            }
         }
     }
 

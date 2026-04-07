@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
+
+    public GameObject model;
     [Header("Move Settings")]
     public float moveSpeed = 5f;
 
@@ -15,10 +17,14 @@ public class PlayerController : MonoBehaviour
     [Header("Look Settings")]
     public float mouseSensitivity = 10f; // 마우스 감도
     public Transform cameraTransform;    // 상하 회전을 시킬 카메라(또는 머리) 오브젝트
+    private float cameraPitch = 0f; // 상하 회전 각도 (X축)
+    private float cameraYaw = 0f;   // 좌우 회전 각도 (Y축)
+    public float topClamp = 70f;    // 위로 쳐다볼 수 있는 최대 각도
+    public float bottomClamp = -30f;// 아래로 내려다볼 수 있는 최대 각도
+
 
     [Header("Components")]
     public Animator animator;
-    private Rigidbody rb;
     //무기 교체
     public weapon_1_ob currentWeapon;
 
@@ -28,6 +34,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool canNextAttack; // 실제 다음 애니메이션 전환 가능 시점
     [HideInInspector] public bool canCancel;     // 이동/회피로 캔슬 가능 여부
 
+    
+
+    public CharacterController characterController;
     // 핵심: 분리된 상태 머신 객체
     public StateMachine stateMachine { get; private set; }
 
@@ -61,9 +70,14 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        characterController = GetComponent<CharacterController>();
+        
         if (currentWeapon != null) EquipWeapon(currentWeapon);
         // 게임 시작 시 초기 상태 지정
         stateMachine.Initialize(idleState);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void Update()
@@ -76,7 +90,27 @@ public class PlayerController : MonoBehaviour
         // 상태 머신 실행
         stateMachine.Update();
     }
+    private void LateUpdate()
+    {
+        if (cameraTransform == null) return;
 
+        // 1. 마우스 입력값에 감도와 Time.deltaTime을 곱해 회전량 계산
+        // (New Input System의 Look(delta) 값은 프레임 레이트에 영향을 받으므로 처리해줍니다)
+        float lookX = mouseMoveInput.x * mouseSensitivity * Time.deltaTime;
+        float lookY = mouseMoveInput.y * mouseSensitivity * Time.deltaTime;
+
+        // 2. 좌우 회전 누적 (Yaw)
+        cameraYaw += lookX;
+
+        // 3. 상하 회전 누적 (Pitch) - 마우스를 위로 올릴 때 위를 보게 하려면 빼줘야 합니다.
+        cameraPitch -= lookY;
+
+        // 4. 화면이 위아래로 360도 홱홱 도는 것을 방지 (목 꺾임 방지)
+        cameraPitch = Mathf.Clamp(cameraPitch, bottomClamp, topClamp);
+
+        // 5. 계산된 각도를 카메라(또는 카메라를 달고 있는 타겟)에 적용
+        cameraTransform.rotation = Quaternion.Euler(cameraPitch, cameraYaw, 0f);
+    }
     public void EquipWeapon(weapon_1_ob newData)
     {
         currentWeapon = newData;
@@ -89,12 +123,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ResetVelocity()
+    private void OnAnimatorMove()
     {
-        if (rb != null)
+        if (animator.applyRootMotion && characterController != null)
         {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
+            // 애니메이션의 프레임당 이동량(deltaPosition)을 가져와서 CharacterController.Move에 적용 (벽 뚫기 방지)
+            characterController.Move(animator.deltaPosition);
         }
     }
 

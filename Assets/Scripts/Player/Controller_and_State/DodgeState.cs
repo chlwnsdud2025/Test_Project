@@ -38,11 +38,7 @@ public class DodgeState : PlayerBaseState
         // 여기서는 정리 작업만 합니다. 절대 ChangeState를 또 부르면 안 됩니다!
         player.animator.applyRootMotion = false;
 
-        if (player.TryGetComponent(out Rigidbody rb))
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-        }
+        
     }
 
     // 대쉬 중에도 공격/대쉬 중복 입력 방지
