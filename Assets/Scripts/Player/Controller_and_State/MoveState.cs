@@ -6,7 +6,7 @@ public class MoveState : PlayerBaseState
     public MoveState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) { }
 
     public override void Enter() {
-        Debug.Log("»óÅÂ: Move");
+        Debug.Log("ìƒíƒœ: Move");
 
         player.animator.CrossFadeInFixedTime(runAnimHash, 0.1f);
 

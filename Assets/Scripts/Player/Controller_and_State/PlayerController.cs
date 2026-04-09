@@ -8,39 +8,39 @@ public class PlayerController : MonoBehaviour
     [Header("Move Settings")]
     public float moveSpeed = 5f;
 
-    // ÀÔ·Â ½Ã½ºÅÛ
+    // ì…ë ¥ ì‹œìŠ¤í…œ
     private InputSystem_Actions controls;
     [HideInInspector] public Vector2 moveInput;
     [HideInInspector] public Vector2 mouseMoveInput;
 
 
     [Header("Look Settings")]
-    public float mouseSensitivity = 10f; // ¸¶¿ì½º °¨µµ
-    public Transform cameraTransform;    // »óÇÏ È¸ÀüÀ» ½ÃÅ³ Ä«¸Ş¶ó(¶Ç´Â ¸Ó¸®) ¿ÀºêÁ§Æ®
-    private float cameraPitch = 0f; // »óÇÏ È¸Àü °¢µµ (XÃà)
-    private float cameraYaw = 0f;   // ÁÂ¿ì È¸Àü °¢µµ (YÃà)
-    public float topClamp = 70f;    // À§·Î ÃÄ´Ùº¼ ¼ö ÀÖ´Â ÃÖ´ë °¢µµ
-    public float bottomClamp = -30f;// ¾Æ·¡·Î ³»·Á´Ùº¼ ¼ö ÀÖ´Â ÃÖ´ë °¢µµ
+    public float mouseSensitivity = 10f; // ë§ˆìš°ìŠ¤ ê°ë„
+    public Transform cameraTransform;    // ìƒí•˜ íšŒì „ì„ ì‹œí‚¬ ì¹´ë©”ë¼(ë˜ëŠ” ë¨¸ë¦¬) ì˜¤ë¸Œì íŠ¸
+    private float cameraPitch = 0f; // ìƒí•˜ íšŒì „ ê°ë„ (Xì¶•)
+    private float cameraYaw = 0f;   // ì¢Œìš° íšŒì „ ê°ë„ (Yì¶•)
+    public float topClamp = 70f;    // ìœ„ë¡œ ì³ë‹¤ë³¼ ìˆ˜ ìˆëŠ” ìµœëŒ€ ê°ë„
+    public float bottomClamp = -30f;// ì•„ë˜ë¡œ ë‚´ë ¤ë‹¤ë³¼ ìˆ˜ ìˆëŠ” ìµœëŒ€ ê°ë„
 
 
     [Header("Components")]
     public Animator animator;
-    //¹«±â ±³Ã¼
+    //ë¬´ê¸° êµì²´
     public weapon_1_ob currentWeapon;
 
     private AnimatorOverrideController overrideController;
 
-    [HideInInspector] public bool canCombo;      // ÇöÀç Å¬¸¯ ½Ã ¿¹¾à °¡´É ¿©ºÎ
-    [HideInInspector] public bool canNextAttack; // ½ÇÁ¦ ´ÙÀ½ ¾Ö´Ï¸ŞÀÌ¼Ç ÀüÈ¯ °¡´É ½ÃÁ¡
-    [HideInInspector] public bool canCancel;     // ÀÌµ¿/È¸ÇÇ·Î Äµ½½ °¡´É ¿©ºÎ
+    [HideInInspector] public bool canCombo;      // í˜„ì¬ í´ë¦­ ì‹œ ì˜ˆì•½ ê°€ëŠ¥ ì—¬ë¶€
+    [HideInInspector] public bool canNextAttack; // ì‹¤ì œ ë‹¤ìŒ ì• ë‹ˆë©”ì´ì…˜ ì „í™˜ ê°€ëŠ¥ ì‹œì 
+    [HideInInspector] public bool canCancel;     // ì´ë™/íšŒí”¼ë¡œ ìº”ìŠ¬ ê°€ëŠ¥ ì—¬ë¶€
 
     
 
     public CharacterController characterController;
-    // ÇÙ½É: ºĞ¸®µÈ »óÅÂ ¸Ó½Å °´Ã¼
+    // í•µì‹¬: ë¶„ë¦¬ëœ ìƒíƒœ ë¨¸ì‹  ê°ì²´
     public StateMachine stateMachine { get; private set; }
 
-    // »ı¼ºÇØµĞ »óÅÂµé (Ä³½Ì)
+    // ìƒì„±í•´ë‘” ìƒíƒœë“¤ (ìºì‹±)
     public IdleState idleState { get; private set; }
     public MoveState moveState { get; private set; }
     public AttackState attackState { get; private set; }
@@ -51,17 +51,17 @@ public class PlayerController : MonoBehaviour
         controls = new InputSystem_Actions();
         stateMachine = new StateMachine();
 
-        // 1. »óÅÂ ÀÎ½ºÅÏ½ºÈ­ (ÀÚ½Å°ú »óÅÂ¸Ó½ÅÀ» ³Ñ°ÜÁÜ)
+        // 1. ìƒíƒœ ì¸ìŠ¤í„´ìŠ¤í™” (ìì‹ ê³¼ ìƒíƒœë¨¸ì‹ ì„ ë„˜ê²¨ì¤Œ)
         idleState = new IdleState(this, stateMachine);
         moveState = new MoveState(this, stateMachine);
         attackState = new AttackState(this, stateMachine);
         dashState = new DodgeState(this, stateMachine);
 
-        // 2. New Input System ÀÌº¥Æ® ¿¬°á
-        // Controller°¡ Á÷Á¢ »óÅÂ¸¦ ¹Ù²ÙÁö ¾Ê°í, ÇöÀç »óÅÂ¿¡°Ô "°ø°İ¹öÆ° ´­·È¾î!"¶ó°í Àü´Ş¸¸ ÇÕ´Ï´Ù.
+        // 2. New Input System ì´ë²¤íŠ¸ ì—°ê²°
+        // Controllerê°€ ì§ì ‘ ìƒíƒœë¥¼ ë°”ê¾¸ì§€ ì•Šê³ , í˜„ì¬ ìƒíƒœì—ê²Œ "ê³µê²©ë²„íŠ¼ ëˆŒë ¸ì–´!"ë¼ê³  ì „ë‹¬ë§Œ í•©ë‹ˆë‹¤.
         controls.PlayerMovement.Attack.performed += ctx => stateMachine.CurrentState.OnAttackInput();
 
-        // (¸¸¾à Dash ¾×¼ÇÀ» ¸¸µå¼Ì´Ù¸é ¾Æ·¡Ã³·³ ¿¬°áÇÕ´Ï´Ù)
+        // (ë§Œì•½ Dash ì•¡ì…˜ì„ ë§Œë“œì…¨ë‹¤ë©´ ì•„ë˜ì²˜ëŸ¼ ì—°ê²°í•©ë‹ˆë‹¤)
         controls.PlayerMovement.Dodge.performed += ctx => stateMachine.CurrentState.OnDashInput();
 
         overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         
         if (currentWeapon != null) EquipWeapon(currentWeapon);
-        // °ÔÀÓ ½ÃÀÛ ½Ã ÃÊ±â »óÅÂ ÁöÁ¤
+        // ê²Œì„ ì‹œì‘ ì‹œ ì´ˆê¸° ìƒíƒœ ì§€ì •
         stateMachine.Initialize(idleState);
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -82,41 +82,41 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // ¸Å ÇÁ·¹ÀÓ ÀÔ·Â°ª ÀĞ±â
+        // ë§¤ í”„ë ˆì„ ì…ë ¥ê°’ ì½ê¸°
         moveInput = controls.PlayerMovement.Move.ReadValue<Vector2>();
         mouseMoveInput = controls.PlayerMovement.Look.ReadValue<Vector2>();
 
 
-        // »óÅÂ ¸Ó½Å ½ÇÇà
+        // ìƒíƒœ ë¨¸ì‹  ì‹¤í–‰
         stateMachine.Update();
     }
     private void LateUpdate()
     {
         if (cameraTransform == null) return;
 
-        // 1. ¸¶¿ì½º ÀÔ·Â°ª¿¡ °¨µµ¿Í Time.deltaTimeÀ» °öÇØ È¸Àü·® °è»ê
-        // (New Input SystemÀÇ Look(delta) °ªÀº ÇÁ·¹ÀÓ ·¹ÀÌÆ®¿¡ ¿µÇâÀ» ¹ŞÀ¸¹Ç·Î Ã³¸®ÇØÁİ´Ï´Ù)
+        // 1. ë§ˆìš°ìŠ¤ ì…ë ¥ê°’ì— ê°ë„ì™€ Time.deltaTimeì„ ê³±í•´ íšŒì „ëŸ‰ ê³„ì‚°
+        // (New Input Systemì˜ Look(delta) ê°’ì€ í”„ë ˆì„ ë ˆì´íŠ¸ì— ì˜í–¥ì„ ë°›ìœ¼ë¯€ë¡œ ì²˜ë¦¬í•´ì¤ë‹ˆë‹¤)
         float lookX = mouseMoveInput.x * mouseSensitivity * Time.deltaTime;
         float lookY = mouseMoveInput.y * mouseSensitivity * Time.deltaTime;
 
-        // 2. ÁÂ¿ì È¸Àü ´©Àû (Yaw)
+        // 2. ì¢Œìš° íšŒì „ ëˆ„ì  (Yaw)
         cameraYaw += lookX;
 
-        // 3. »óÇÏ È¸Àü ´©Àû (Pitch) - ¸¶¿ì½º¸¦ À§·Î ¿Ã¸± ¶§ À§¸¦ º¸°Ô ÇÏ·Á¸é »©Áà¾ß ÇÕ´Ï´Ù.
+        // 3. ìƒí•˜ íšŒì „ ëˆ„ì  (Pitch) - ë§ˆìš°ìŠ¤ë¥¼ ìœ„ë¡œ ì˜¬ë¦´ ë•Œ ìœ„ë¥¼ ë³´ê²Œ í•˜ë ¤ë©´ ë¹¼ì¤˜ì•¼ í•©ë‹ˆë‹¤.
         cameraPitch -= lookY;
 
-        // 4. È­¸éÀÌ À§¾Æ·¡·Î 360µµ È´È´ µµ´Â °ÍÀ» ¹æÁö (¸ñ ²ªÀÓ ¹æÁö)
+        // 4. í™”ë©´ì´ ìœ„ì•„ë˜ë¡œ 360ë„ í™±í™± ë„ëŠ” ê²ƒì„ ë°©ì§€ (ëª© êº¾ì„ ë°©ì§€)
         cameraPitch = Mathf.Clamp(cameraPitch, bottomClamp, topClamp);
 
-        // 5. °è»êµÈ °¢µµ¸¦ Ä«¸Ş¶ó(¶Ç´Â Ä«¸Ş¶ó¸¦ ´Ş°í ÀÖ´Â Å¸°Ù)¿¡ Àû¿ë
+        // 5. ê³„ì‚°ëœ ê°ë„ë¥¼ ì¹´ë©”ë¼(ë˜ëŠ” ì¹´ë©”ë¼ë¥¼ ë‹¬ê³  ìˆëŠ” íƒ€ê²Ÿ)ì— ì ìš©
         cameraTransform.rotation = Quaternion.Euler(cameraPitch, cameraYaw, 0f);
     }
     public void EquipWeapon(weapon_1_ob newData)
     {
         currentWeapon = newData;
 
-        // ¹«±â µ¥ÀÌÅÍ¿¡ ÀÖ´Â Å¬¸³µéÀ» ¾Ö´Ï¸ŞÀÌÅÍ ³ëµå¿¡ ¸ÅÇÎ
-        // "Attack1"ÀÌ¶ó´Â ³ëµå ÀÌ¸§À» ½ÇÁ¦ ÆÄÀÏ(newData.comboClips[0])·Î ±³Ã¼
+        // ë¬´ê¸° ë°ì´í„°ì— ìˆëŠ” í´ë¦½ë“¤ì„ ì• ë‹ˆë©”ì´í„° ë…¸ë“œì— ë§¤í•‘
+        // "Attack1"ì´ë¼ëŠ” ë…¸ë“œ ì´ë¦„ì„ ì‹¤ì œ íŒŒì¼(newData.comboClips[0])ë¡œ êµì²´
         for (int i = 0; i < newData.comboClips.Length; i++)
         {
             overrideController[$"Attack{i + 1}"] = newData.comboClips[i];
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         if (animator.applyRootMotion && characterController != null)
         {
-            // ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ÇÁ·¹ÀÓ´ç ÀÌµ¿·®(deltaPosition)À» °¡Á®¿Í¼­ CharacterController.Move¿¡ Àû¿ë (º® ¶Õ±â ¹æÁö)
+            // ì• ë‹ˆë©”ì´ì…˜ì˜ í”„ë ˆì„ë‹¹ ì´ë™ëŸ‰(deltaPosition)ì„ ê°€ì ¸ì™€ì„œ CharacterController.Moveì— ì ìš© (ë²½ ëš«ê¸° ë°©ì§€)
             characterController.Move(animator.deltaPosition);
         }
     }

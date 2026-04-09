@@ -5,7 +5,7 @@ public class weapon_1_ob : ScriptableObject
     public string weaponName;
 
     [Header("Combo Clips")]
-    // ÀÎ½ºÆåÅÍ¿¡¼­ ¾Ö´Ï¸ŞÀÌ¼Ç ÆÄÀÏÀ» Á÷Á¢ ½½·Ô¿¡ ³Ö½À´Ï´Ù.
+    // ì¸ìŠ¤í™í„°ì—ì„œ ì• ë‹ˆë©”ì´ì…˜ íŒŒì¼ì„ ì§ì ‘ ìŠ¬ë¡¯ì— ë„£ìŠµë‹ˆë‹¤.
     public AnimationClip[] comboClips;
 
     [Header("Stats")]

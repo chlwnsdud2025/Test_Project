@@ -8,7 +8,7 @@ public class DodgeState : PlayerBaseState
 
     public override void Enter()
     {
-        Debug.Log("»óÅÂ: Roll");
+        Debug.Log("ìƒíƒœ: Roll");
         player.animator.applyRootMotion = true;
         player.animator.CrossFadeInFixedTime(dodgeAnimHash, 0.1f);
 
@@ -18,12 +18,12 @@ public class DodgeState : PlayerBaseState
     {
         AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
 
-        // 1. ¿©±â¼­ »óÅÂ ÀüÈ¯ Á¶°ÇÀ» Ã¼Å©ÇÕ´Ï´Ù.
+        // 1. ì—¬ê¸°ì„œ ìƒíƒœ ì „í™˜ ì¡°ê±´ì„ ì²´í¬í•©ë‹ˆë‹¤.
         if (stateInfo.shortNameHash == dodgeAnimHash && !player.animator.IsInTransition(0))
         {
             if (stateInfo.normalizedTime >= 0.75f)
             {
-                // ¿©±â¼­ µü ÇÑ ¹ø¸¸ ChangeState¸¦ È£ÃâÇÕ´Ï´Ù.
+                // ì—¬ê¸°ì„œ ë”± í•œ ë²ˆë§Œ ChangeStateë¥¼ í˜¸ì¶œí•©ë‹ˆë‹¤.
                 if (player.moveInput != Vector2.zero)
                     stateMachine.ChangeState(player.moveState);
                 else
@@ -32,16 +32,16 @@ public class DodgeState : PlayerBaseState
         }
     }
 
-    // 2. Exit()´Â StateMachine.ChangeState()¿¡ ÀÇÇØ 'ÀÚµ¿À¸·Î' È£ÃâµË´Ï´Ù.
+    // 2. Exit()ëŠ” StateMachine.ChangeState()ì— ì˜í•´ 'ìë™ìœ¼ë¡œ' í˜¸ì¶œë©ë‹ˆë‹¤.
     public override void Exit()
     {
-        // ¿©±â¼­´Â Á¤¸® ÀÛ¾÷¸¸ ÇÕ´Ï´Ù. Àı´ë ChangeState¸¦ ¶Ç ºÎ¸£¸é ¾È µË´Ï´Ù!
+        // ì—¬ê¸°ì„œëŠ” ì •ë¦¬ ì‘ì—…ë§Œ í•©ë‹ˆë‹¤. ì ˆëŒ€ ChangeStateë¥¼ ë˜ ë¶€ë¥´ë©´ ì•ˆ ë©ë‹ˆë‹¤!
         player.animator.applyRootMotion = false;
 
         
     }
 
-    // ´ë½¬ Áß¿¡µµ °ø°İ/´ë½¬ Áßº¹ ÀÔ·Â ¹æÁö
-    public override void OnAttackInput() { /* ¹«½Ã */ }
-    public override void OnDashInput() { /* ¹«½Ã */ }
+    // ëŒ€ì‰¬ ì¤‘ì—ë„ ê³µê²©/ëŒ€ì‰¬ ì¤‘ë³µ ì…ë ¥ ë°©ì§€
+    public override void OnAttackInput() { /* ë¬´ì‹œ */ }
+    public override void OnDashInput() { /* ë¬´ì‹œ */ }
 }

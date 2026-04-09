@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AttackBehaviour : StateMachineBehaviour
 {
-    [Header("Å¸ÀÌ¹Ö ¼³Á¤ (0.0 ~ 1.0)")]
+    [Header("íƒ€ì´ë° ì„¤ì • (0.0 ~ 1.0)")]
     public float comboWindowStart = 0.2f;
     public float comboWindowEnd = 0.7f;
     public float comboTransitionPoint = 0.6f;
@@ -23,8 +23,8 @@ public class AttackBehaviour : StateMachineBehaviour
     {
         if (player == null) return;
 
-        //  [ÇÙ½É ÇØ°á] ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ ¼­·Î ¼¯ÀÌ´Â Æ®·£Áö¼Ç ±¸°£¿¡¼­´Â
-        // ÀÌÀü ¾Ö´Ï¸ÞÀÌ¼ÇÀÇ Âî²¨±â °ªÀÌ ÇÃ·¡±×¸¦ ¸ÁÄ¡Áö ¸øÇÏ°Ô °­Á¦·Î 0±âÈ­ÇÏ°í ¸®ÅÏ½ÃÅµ´Ï´Ù.
+        //  [í•µì‹¬ í•´ê²°] ì• ë‹ˆë©”ì´ì…˜ì´ ì„œë¡œ ì„žì´ëŠ” íŠ¸ëžœì§€ì…˜ êµ¬ê°„ì—ì„œëŠ”
+        // ì´ì „ ì• ë‹ˆë©”ì´ì…˜ì˜ ì°Œêº¼ê¸° ê°’ì´ í”Œëž˜ê·¸ë¥¼ ë§ì¹˜ì§€ ëª»í•˜ê²Œ ê°•ì œë¡œ 0ê¸°í™”í•˜ê³  ë¦¬í„´ì‹œí‚µë‹ˆë‹¤.
         if (animator.IsInTransition(layerIndex))
         {
             player.canCombo = false;
@@ -35,7 +35,7 @@ public class AttackBehaviour : StateMachineBehaviour
 
         float progress = stateInfo.normalizedTime;
 
-        // Æ®·£Áö¼ÇÀÌ ¿ÏÀüÈ÷ ³¡³ª°í ÇöÀç ¾Ö´Ï¸ÞÀÌ¼ÇÀÌ ¿ÂÀüÈ÷ Àç»ý ÁßÀÏ ¶§¸¸ ÆÇÁ¤
+        // íŠ¸ëžœì§€ì…˜ì´ ì™„ì „ížˆ ëë‚˜ê³  í˜„ìž¬ ì• ë‹ˆë©”ì´ì…˜ì´ ì˜¨ì „ížˆ ìž¬ìƒ ì¤‘ì¼ ë•Œë§Œ íŒì •
         player.canCombo = (progress >= comboWindowStart && progress <= comboWindowEnd);
         player.canNextAttack = (progress >= comboTransitionPoint);
         player.canCancel = (progress >= cancelWindowStart);

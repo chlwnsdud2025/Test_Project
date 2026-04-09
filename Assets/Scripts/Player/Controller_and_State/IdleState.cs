@@ -6,13 +6,13 @@ public class IdleState : PlayerBaseState
     public IdleState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) { }
 
     public override void Enter() { 
-        Debug.Log("»óÅÂ: Idle");
+        Debug.Log("ìƒíƒœ: Idle");
         player.animator.CrossFade(idleAnimHash, 0.05f);
     }
 
     public override void Update()
     {
-        // ÀÌµ¿ ÀÔ·ÂÀÌ ÀÖÀ¸¸é Move »óÅÂ·Î ÀüÈ¯
+        // ì´ë™ ì…ë ¥ì´ ìˆìœ¼ë©´ Move ìƒíƒœë¡œ ì „í™˜
         if (player.moveInput != Vector2.zero)
         {
             stateMachine.ChangeState(player.moveState);

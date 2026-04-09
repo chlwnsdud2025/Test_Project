@@ -4,13 +4,13 @@ public class AttackState : PlayerBaseState
 {
     private int comboIndex = 0;
     private bool comboInputReceived = false;
-    private bool isContinuingCombo = false; // ÄŞº¸ ¿¬¼Ó ¼öÇà ¿©ºÎ ÇÃ·¡±×
+    private bool isContinuingCombo = false; // ì½¤ë³´ ì—°ì† ìˆ˜í–‰ ì—¬ë¶€ í”Œë˜ê·¸
 
     public AttackState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) { }
 
     public override void Enter()
     {
-        // »õ·Î¿î Å¸°İ ½ÃÀÛ ½Ã ÇÃ·¡±× ÃÊ±âÈ­
+        // ìƒˆë¡œìš´ íƒ€ê²© ì‹œì‘ ì‹œ í”Œë˜ê·¸ ì´ˆê¸°í™”
         isContinuingCombo = false;
         comboInputReceived = false;
 
@@ -22,19 +22,19 @@ public class AttackState : PlayerBaseState
 
     public override void Update()
     {
-        // 1. ÄŞº¸ ÀüÈ¯ ·ÎÁ÷
+        // 1. ì½¤ë³´ ì „í™˜ ë¡œì§
         if (comboInputReceived && player.canNextAttack)
         {
             if (comboIndex + 1 < player.currentWeapon.comboClips.Length)
             {
                 comboIndex++;
-                isContinuingCombo = true; // ´ÙÀ½ ÄŞº¸·Î ÀÌ¾îÁüÀ» Ç¥½Ã
+                isContinuingCombo = true; // ë‹¤ìŒ ì½¤ë³´ë¡œ ì´ì–´ì§ì„ í‘œì‹œ
                 stateMachine.ChangeState(this);
                 return;
             }
         }
 
-        // 2. ÀÌµ¿/È¸ÇÇ Äµ½½ ·ÎÁ÷
+        // 2. ì´ë™/íšŒí”¼ ìº”ìŠ¬ ë¡œì§
         if (player.canCancel)
         {
             if (player.moveInput != Vector2.zero)
@@ -42,10 +42,10 @@ public class AttackState : PlayerBaseState
                 stateMachine.ChangeState(player.moveState);
                 return;
             }
-            // (Ãß°¡ Á¦¾È) ¿©±â¼­ ±¸¸£±â ÀÔ·Â ½Ã ¹Ù·Î ÀüÈ¯µÇµµ·Ï ±¸Á¶¸¦ È®ÀåÇÒ ¼ö ÀÖ½À´Ï´Ù.
+            // (ì¶”ê°€ ì œì•ˆ) ì—¬ê¸°ì„œ êµ¬ë¥´ê¸° ì…ë ¥ ì‹œ ë°”ë¡œ ì „í™˜ë˜ë„ë¡ êµ¬ì¡°ë¥¼ í™•ì¥í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.
         }
 
-        // 3. ÀÚ¿¬ Á¾·á
+        // 3. ìì—° ì¢…ë£Œ
         AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
         if (!player.animator.IsInTransition(0) && stateInfo.normalizedTime >= 0.95f)
         {
@@ -58,13 +58,13 @@ public class AttackState : PlayerBaseState
         if (player.canCombo)
         {
             comboInputReceived = true;
-            Debug.Log($"{comboIndex + 1}Å¸ Áß ´ÙÀ½ ÄŞº¸ ¿¹¾àµÊ!");
+            Debug.Log($"{comboIndex + 1}íƒ€ ì¤‘ ë‹¤ìŒ ì½¤ë³´ ì˜ˆì•½ë¨!");
         }
     }
 
     public override void Exit()
     {
-        // ÄŞº¸°¡ ÀÌ¾îÁö´Â »óÈ²ÀÌ ¾Æ´Ò ¶§¸¸(°ø°İ ¼¼Æ®°¡ ¿ÏÀüÈ÷ ³¡³µÀ» ¶§¸¸) ÃÊ±âÈ­
+        // ì½¤ë³´ê°€ ì´ì–´ì§€ëŠ” ìƒí™©ì´ ì•„ë‹ ë•Œë§Œ(ê³µê²© ì„¸íŠ¸ê°€ ì™„ì „íˆ ëë‚¬ì„ ë•Œë§Œ) ì´ˆê¸°í™”
         if (!isContinuingCombo)
         {
             comboIndex = 0;
@@ -73,5 +73,5 @@ public class AttackState : PlayerBaseState
         }
     }
 
-    public override void OnDashInput() { /* ¹«½Ã */ }
+    public override void OnDashInput() { /* ë¬´ì‹œ */ }
 }

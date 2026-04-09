@@ -7,7 +7,7 @@ public class DeadState : PlayerBaseState
 
     public override void Enter()
     {
-        Debug.Log("»óÅÂ: Dead");
+        Debug.Log("ìƒíƒœ: Dead");
         
     }
 
@@ -16,7 +16,7 @@ public class DeadState : PlayerBaseState
         
     }
 
-    // ´ë½¬ Áß¿¡µµ °ø°İ/´ë½¬ Áßº¹ ÀÔ·Â ¹æÁö
-    public override void OnAttackInput() { /* ¹«½Ã */ }
-    public override void OnDashInput() { /* ¹«½Ã */ }
+    // ëŒ€ì‰¬ ì¤‘ì—ë„ ê³µê²©/ëŒ€ì‰¬ ì¤‘ë³µ ì…ë ¥ ë°©ì§€
+    public override void OnAttackInput() { /* ë¬´ì‹œ */ }
+    public override void OnDashInput() { /* ë¬´ì‹œ */ }
 }

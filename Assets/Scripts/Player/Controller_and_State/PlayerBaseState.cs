@@ -28,7 +28,7 @@ public abstract class PlayerBaseState
 
    
 
-    //  ºÎ¸ğÀÇ È¸Àü ÇÔ¼ö¸¦ 3D ¾×¼Ç(Ä«¸Ş¶ó ±âÁØ)¿¡ ¸Â°Ô µ¤¾î¾¹´Ï´Ù.
+    //  ë¶€ëª¨ì˜ íšŒì „ í•¨ìˆ˜ë¥¼ 3D ì•¡ì…˜(ì¹´ë©”ë¼ ê¸°ì¤€)ì— ë§ê²Œ ë®ì–´ì”ë‹ˆë‹¤.
     protected virtual void HandleRotation()
     {
         if (player.moveInput != Vector2.zero)
