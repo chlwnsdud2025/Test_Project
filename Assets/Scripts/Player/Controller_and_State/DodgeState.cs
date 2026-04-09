@@ -9,21 +9,40 @@ public class DodgeState : PlayerBaseState
     public override void Enter()
     {
         Debug.Log("상태: Roll");
+
+        if (player.moveInput != Vector2.zero)
+        {
+            Vector3 camForward = player.cameraTransform.forward;
+            Vector3 camRight = player.cameraTransform.right;
+            camForward.y = 0f;
+            camRight.y = 0f;
+            camForward.Normalize();
+            camRight.Normalize();
+
+            Vector3 rollDir = (camRight * player.moveInput.x + camForward * player.moveInput.y).normalized;
+
+            if (rollDir != Vector3.zero)
+            {
+                // [핵심 수정] model이 아니라 루트(Player) 자체를 굴러갈 방향으로 즉시 회전시킵니다.
+                player.transform.rotation = Quaternion.LookRotation(rollDir);
+
+                // 혹시 모델의 로컬 회전이 꼬여있을 수 있으니 정렬해줍니다.
+                player.model.transform.localRotation = Quaternion.identity;
+            }
+        }
+
         player.animator.applyRootMotion = true;
         player.animator.CrossFadeInFixedTime(dodgeAnimHash, 0.1f);
-
     }
 
     public override void Update()
     {
         AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
 
-        // 1. 여기서 상태 전환 조건을 체크합니다.
         if (stateInfo.shortNameHash == dodgeAnimHash && !player.animator.IsInTransition(0))
         {
             if (stateInfo.normalizedTime >= 0.75f)
             {
-                // 여기서 딱 한 번만 ChangeState를 호출합니다.
                 if (player.moveInput != Vector2.zero)
                     stateMachine.ChangeState(player.moveState);
                 else
@@ -32,16 +51,11 @@ public class DodgeState : PlayerBaseState
         }
     }
 
-    // 2. Exit()는 StateMachine.ChangeState()에 의해 '자동으로' 호출됩니다.
     public override void Exit()
     {
-        // 여기서는 정리 작업만 합니다. 절대 ChangeState를 또 부르면 안 됩니다!
         player.animator.applyRootMotion = false;
-
-        
     }
 
-    // 대쉬 중에도 공격/대쉬 중복 입력 방지
     public override void OnAttackInput() { /* 무시 */ }
     public override void OnDashInput() { /* 무시 */ }
 }

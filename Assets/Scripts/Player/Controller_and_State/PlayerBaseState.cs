@@ -33,7 +33,6 @@ public abstract class PlayerBaseState
     {
         if (player.moveInput != Vector2.zero)
         {
-            // 카메라가 바라보는 방향 중 수평 방향(Y=0)만 추출
             Vector3 camForward = player.cameraTransform.forward;
             Vector3 camRight = player.cameraTransform.right;
             camForward.y = 0f;
@@ -41,18 +40,14 @@ public abstract class PlayerBaseState
             camForward.Normalize();
             camRight.Normalize();
 
-            // 입력에 따른 절대적인 이동 방향 계산
             Vector3 moveDir = (camRight * player.moveInput.x + camForward * player.moveInput.y).normalized;
 
             if (moveDir != Vector3.zero)
             {
-                // 모델(또는 플레이어 전체)이 이동 방향을 부드럽게 바라보게 함
                 Quaternion targetRotation = Quaternion.LookRotation(moveDir);
-                player.model.transform.rotation = Quaternion.Slerp(
-                    player.model.transform.rotation,
-                    targetRotation,
-                    15f * Time.deltaTime // 회전 속도 조절
-                );
+                // [수정] 이동할 때도 모델이 아닌 루트 자체를 회전시킵니다.
+                player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 15f * Time.deltaTime);
+                player.model.transform.localRotation = Quaternion.identity;
             }
         }
     }
