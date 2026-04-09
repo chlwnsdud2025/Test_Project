@@ -19,7 +19,7 @@ public class MoveState : PlayerBaseState
             stateMachine.ChangeState(player.idleState);
             return;
         }
-
+        HandleRotation();
         Vector3 camForward = player.cameraTransform.forward;
         Vector3 camRight = player.cameraTransform.right;
         camForward.y = 0f;

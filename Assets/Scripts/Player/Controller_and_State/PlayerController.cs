@@ -94,22 +94,21 @@ public class PlayerController : MonoBehaviour
     {
         if (cameraTransform == null) return;
 
-        // 1. 마우스 입력값에 감도와 Time.deltaTime을 곱해 회전량 계산
-        // (New Input System의 Look(delta) 값은 프레임 레이트에 영향을 받으므로 처리해줍니다)
-        float lookX = mouseMoveInput.x * mouseSensitivity * Time.deltaTime;
-        float lookY = mouseMoveInput.y * mouseSensitivity * Time.deltaTime;
+        // 1. 입력값 확인 (Input System에서 Delta 값을 제대로 받아오는지 확인)
+        float lookX = mouseMoveInput.x * mouseSensitivity * 0.1f; // deltaTime 대신 0.1f 등으로 고정해서 테스트해보세요
+        float lookY = mouseMoveInput.y * mouseSensitivity * 0.1f;
 
-        // 2. 좌우 회전 누적 (Yaw)
+        // 2. 값 누적
         cameraYaw += lookX;
-
-        // 3. 상하 회전 누적 (Pitch) - 마우스를 위로 올릴 때 위를 보게 하려면 빼줘야 합니다.
         cameraPitch -= lookY;
 
-        // 4. 화면이 위아래로 360도 홱홱 도는 것을 방지 (목 꺾임 방지)
+        // 3. 각도 제한
         cameraPitch = Mathf.Clamp(cameraPitch, bottomClamp, topClamp);
 
-        // 5. 계산된 각도를 카메라(또는 카메라를 달고 있는 타겟)에 적용
+        // 4. 실제 적용 (이 부분이 실행되는지 Debug.Log로 확인 필요)
         cameraTransform.rotation = Quaternion.Euler(cameraPitch, cameraYaw, 0f);
+
+        // Debug.Log($"Yaw: {cameraYaw}, Pitch: {cameraPitch}"); // 값이 변하는지 콘솔창에서 확인하세요.
     }
     public void EquipWeapon(weapon_1_ob newData)
     {
