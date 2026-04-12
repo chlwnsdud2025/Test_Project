@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Attack_SO_Data;
 
 public class AttackState : PlayerBaseState
 {
@@ -6,15 +7,19 @@ public class AttackState : PlayerBaseState
     private bool comboInputReceived = false;
     private bool isContinuingCombo = false;
 
-    // 회전을 허용할 애니메이션 진행도 (0.0 ~ 1.0)
-    // 0.3f면 애니메이션의 30%가 재생될 때까지만 방향을 틀 수 있습니다.
     private float trackingWindow = 0.3f;
+
     public AttackState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) { }
 
     public override void Enter()
     {
         isContinuingCombo = false;
         comboInputReceived = false;
+
+        // 진입할 때 모든 플래그 초기화
+        player.canCombo = false;
+        player.canNextAttack = false;
+        player.canCancel = false;
 
         player.animator.applyRootMotion = true;
 
@@ -25,10 +30,27 @@ public class AttackState : PlayerBaseState
     public override void Update()
     {
         AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
+        float progress = stateInfo.normalizedTime;
+
+        // 현재 재생 중인 공격의 타이밍 데이터를 가져옵니다.
+        AttackData currentAttackData = player.currentWeapon.comboAttacks[comboIndex];
+
+        // 트랜지션 중이 아닐 때만 플래그 업데이트 (기존 AttackBehaviour의 역할 대체)
+        if (!player.animator.IsInTransition(0))
+        {
+            player.canCombo = (progress >= currentAttackData.comboWindowStart && progress <= currentAttackData.comboWindowEnd);
+            player.canNextAttack = (progress >= currentAttackData.comboTransitionPoint);
+            player.canCancel = (progress >= currentAttackData.cancelWindowStart);
+        }
+        else
+        {
+            player.canCombo = false;
+            player.canNextAttack = false;
+            player.canCancel = false;
+        }
 
         // 1. 공격 초반 방향 보정 (Attack Tracking)
-        // 트랜지션 중이거나 애니메이션 진행도가 설정값(trackingWindow) 이하일 때만 부드럽게 회전
-        if (player.animator.IsInTransition(0) || stateInfo.normalizedTime <= trackingWindow)
+        if (player.animator.IsInTransition(0) || progress <= trackingWindow)
         {
             if (player.moveInput != Vector2.zero)
             {
@@ -44,7 +66,6 @@ public class AttackState : PlayerBaseState
                 if (attackDir != Vector3.zero)
                 {
                     Quaternion targetRotation = Quaternion.LookRotation(attackDir);
-                    // 즉시 회전하지 않고 Slerp를 사용해 부드럽게 따라가도록 수정 (15f는 회전 속도)
                     player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, 15f * Time.deltaTime);
                     player.model.transform.localRotation = Quaternion.identity;
                 }
@@ -54,7 +75,7 @@ public class AttackState : PlayerBaseState
         // 2. 콤보 전환 로직
         if (comboInputReceived && player.canNextAttack)
         {
-            if (comboIndex + 1 < player.currentWeapon.comboClips.Length)
+            if (comboIndex + 1 < player.currentWeapon.comboAttacks.Length)
             {
                 comboIndex++;
                 isContinuingCombo = true;
@@ -74,7 +95,7 @@ public class AttackState : PlayerBaseState
         }
 
         // 4. 자연 종료
-        if (!player.animator.IsInTransition(0) && stateInfo.normalizedTime >= 0.95f)
+        if (!player.animator.IsInTransition(0) && progress >= 0.95f)
         {
             stateMachine.ChangeState(player.idleState);
         }

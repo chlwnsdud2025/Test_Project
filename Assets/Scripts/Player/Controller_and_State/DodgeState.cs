@@ -4,12 +4,22 @@ public class DodgeState : PlayerBaseState
 {
     private readonly int dodgeAnimHash = Animator.StringToHash("Roll");
 
+    // 선입력(버퍼) 상태를 저장할 변수들
+    private bool attackBuffered = false;
+    private bool dodgeBuffered = false;
+
     public DodgeState(PlayerController player, StateMachine stateMachine) : base(player, stateMachine) { }
 
     public override void Enter()
     {
         Debug.Log("상태: Roll");
 
+        // 상태 진입 시 무적 플래그 및 선입력 데이터 초기화
+        player.isInvincible = false;
+        attackBuffered = false;
+        dodgeBuffered = false;
+
+        // 방향 전환 로직 (기존과 동일)
         if (player.moveInput != Vector2.zero)
         {
             Vector3 camForward = player.cameraTransform.forward;
@@ -23,10 +33,7 @@ public class DodgeState : PlayerBaseState
 
             if (rollDir != Vector3.zero)
             {
-                // [핵심 수정] model이 아니라 루트(Player) 자체를 굴러갈 방향으로 즉시 회전시킵니다.
                 player.transform.rotation = Quaternion.LookRotation(rollDir);
-
-                // 혹시 모델의 로컬 회전이 꼬여있을 수 있으니 정렬해줍니다.
                 player.model.transform.localRotation = Quaternion.identity;
             }
         }
@@ -38,24 +45,75 @@ public class DodgeState : PlayerBaseState
     public override void Update()
     {
         AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
+        float progress = stateInfo.normalizedTime;
+        Roll_SO_Data dodgeData = player.currentDodgeData;
 
         if (stateInfo.shortNameHash == dodgeAnimHash && !player.animator.IsInTransition(0))
         {
-            if (stateInfo.normalizedTime >= 0.75f)
+            // 1. 무적(I-Frame) 판정 로직
+            player.isInvincible = (progress >= dodgeData.iframeStart && progress <= dodgeData.iframeEnd);
+
+            // 2. 선입력 실행 및 캔슬 로직 (cancelWindow 도달 시)
+            if (progress >= dodgeData.cancelWindow)
             {
-                if (player.moveInput != Vector2.zero)
+                // 예약된 공격이 있다면 공격 상태로 전환!
+                if (attackBuffered)
+                {
+                    stateMachine.ChangeState(player.attackState);
+                    return;
+                }
+                // 예약된 구르기가 있다면 연속 구르기 실행!
+                else if (dodgeBuffered)
+                {
+                    stateMachine.ChangeState(player.dashState);
+                    return;
+                }
+                // 예약된 버튼은 없지만 이동 키를 누르고 있다면 이동 상태로 전환
+                else if (player.moveInput != Vector2.zero)
+                {
                     stateMachine.ChangeState(player.moveState);
-                else
-                    stateMachine.ChangeState(player.idleState);
+                    return;
+                }
+            }
+
+            // 3. 자연 종료 로직 (아무 입력도 없이 animationEnd 도달 시 Idle로 전환)
+            if (progress >= dodgeData.animationEnd)
+            {
+                stateMachine.ChangeState(player.idleState);
             }
         }
     }
 
     public override void Exit()
     {
+        player.isInvincible = false;
         player.animator.applyRootMotion = false;
     }
 
-    public override void OnAttackInput() { /* 무시 */ }
-    public override void OnDashInput() { /* 무시 */ }
+    // [핵심 변경점] 입력을 무시하지 않고 선입력 기간인지 체크하여 예약합니다.
+    public override void OnAttackInput()
+    {
+        AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
+        float progress = stateInfo.normalizedTime;
+
+        // 현재 애니메이션이 선입력을 받을 수 있는 구간이라면 버퍼에 저장
+        if (progress >= player.currentDodgeData.preInputWindowStart)
+        {
+            attackBuffered = true;
+            Debug.Log("구르기 중 공격 선입력 완료!");
+        }
+    }
+
+    public override void OnDashInput()
+    {
+        AnimatorStateInfo stateInfo = player.animator.GetCurrentAnimatorStateInfo(0);
+        float progress = stateInfo.normalizedTime;
+
+        // 구르기 연타 시 다음 구르기 예약
+        if (progress >= player.currentDodgeData.preInputWindowStart)
+        {
+            dodgeBuffered = true;
+            Debug.Log("구르기 연속 선입력 완료!");
+        }
+    }
 }

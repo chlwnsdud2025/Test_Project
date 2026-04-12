@@ -1,6 +1,7 @@
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Attack_SO_Data;
 public class PlayerController : MonoBehaviour
 {
 
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
     [Header("Components")]
     public Animator animator;
     //무기 교체
-    public weapon_1_ob currentWeapon;
+    public Attack_SO_Data currentWeapon;
 
     private AnimatorOverrideController overrideController;
 
@@ -37,6 +38,10 @@ public class PlayerController : MonoBehaviour
     
 
     public CharacterController characterController;
+
+    [Header("Dodge Settings")]
+    public Roll_SO_Data currentDodgeData; // 인스펙터에서 구르기 SO 할당
+    [HideInInspector] public bool isInvincible = false; // 현재 무적 상태인지 확인하는 플래그
     // 핵심: 분리된 상태 머신 객체
     public StateMachine stateMachine { get; private set; }
 
@@ -110,15 +115,20 @@ public class PlayerController : MonoBehaviour
 
         // Debug.Log($"Yaw: {cameraYaw}, Pitch: {cameraPitch}"); // 값이 변하는지 콘솔창에서 확인하세요.
     }
-    public void EquipWeapon(weapon_1_ob newData)
+    public void EquipWeapon(Attack_SO_Data newData)
     {
         currentWeapon = newData;
 
         // 무기 데이터에 있는 클립들을 애니메이터 노드에 매핑
-        // "Attack1"이라는 노드 이름을 실제 파일(newData.comboClips[0])로 교체
-        for (int i = 0; i < newData.comboClips.Length; i++)
+        for (int i = 0; i < newData.comboAttacks.Length; i++)
         {
-            overrideController[$"Attack{i + 1}"] = newData.comboClips[i];
+            // AttackData 안에 있는 clip을 꺼내서 매핑합니다.
+            overrideController[$"Attack{i + 1}"] = newData.comboAttacks[i].clip;
+        }
+
+        if (currentDodgeData != null)
+        {
+            overrideController["Roll"] = currentDodgeData.clip;
         }
     }
 

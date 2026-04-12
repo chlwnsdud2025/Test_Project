@@ -124,6 +124,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6134165615573843303, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
   m_PrefabInstance: {fileID: 8444731650611709221}
   m_PrefabAsset: {fileID: 0}
+--- !u!143 &79134500 stripped
+CharacterController:
+  m_CorrespondingSourceObject: {fileID: 3145073261841519314, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
+  m_PrefabInstance: {fileID: 8444731650611709221}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &222021806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 483700253087327332, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
@@ -864,6 +869,14 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 1769318329}
+    - target: {fileID: 4162472679781091843, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
+      propertyPath: currentDodgeData
+      value: 
+      objectReference: {fileID: 11400000, guid: f4d6fec8c7f44f746a0bff74112bf4dc, type: 2}
+    - target: {fileID: 4162472679781091843, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
+      propertyPath: characterController
+      value: 
+      objectReference: {fileID: 79134500}
     - target: {fileID: 6134165615573843303, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
       propertyPath: m_Name
       value: Player
