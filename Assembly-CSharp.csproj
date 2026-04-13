@@ -65,9 +65,9 @@
     <Compile Include="Assets\Scripts\Player\Controller_and_State\AttackState.cs" />
     <Compile Include="Assets\Scripts\ScriptableObject\Roll_SO_Data.cs" />
     <Compile Include="Assets\Scripts\Camera\CameraController.cs" />
+    <Compile Include="Assets\Scripts\Player\Controller_and_State\SprintState.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\IdleState.cs" />
     <Compile Include="Assets\Scripts\ScriptableObject\Attack_SO_Data.cs" />
-    <Compile Include="Assets\Scripts\Player\Controller_and_State\AttackBehaviour.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\StateMachine.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\DeadState.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\DodgeState.cs" />
@@ -75,6 +75,7 @@
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Player\Controller_and_State\PlayerBaseState.cs" />
+    <Compile Include="Assets\Scripts\Player\Controller_and_State\WalkState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
