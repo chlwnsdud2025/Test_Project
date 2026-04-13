@@ -129,6 +129,11 @@ CharacterController:
   m_CorrespondingSourceObject: {fileID: 3145073261841519314, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
   m_PrefabInstance: {fileID: 8444731650611709221}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &79134501 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8452436672574896511, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
+  m_PrefabInstance: {fileID: 8444731650611709221}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &222021806 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 483700253087327332, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
@@ -161,7 +166,7 @@ Transform:
   m_GameObject: {fileID: 237939454}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.813, z: -2.5}
+  m_LocalPosition: {x: 0, y: 1.9, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -213,7 +218,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 1769318329}
+    TrackingTarget: {fileID: 599824393}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:
@@ -387,8 +392,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   player: {fileID: 79134498}
-  cameraPos: {x: 0, y: 2, z: -2.5}
-  cameraRot: {x: 10, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -516,6 +519,51 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &599824391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 599824393}
+  - component: {fileID: 599824392}
+  m_Layer: 0
+  m_Name: CameraTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &599824392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599824391}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1260a690b5f7ab14d8e5c96aaceb2f91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  player: {fileID: 79134501}
+--- !u!4 &599824393
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 599824391}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &626292860
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,7 +593,7 @@ Transform:
   m_GameObject: {fileID: 626292860}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.813, z: -2.5}
+  m_LocalPosition: {x: 0, y: 1.9, z: -2.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -994,11 +1042,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1756582844}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1769318329 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1656016485444754874, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
-  m_PrefabInstance: {fileID: 8444731650611709221}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8444731650611709221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1007,14 +1050,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1656016485444754874, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4162472679781091843, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
       propertyPath: model
       value: 
       objectReference: {fileID: 222021806}
     - target: {fileID: 4162472679781091843, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
+      propertyPath: moveSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4162472679781091843, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
+      propertyPath: cameraTarget
+      value: 
+      objectReference: {fileID: 599824393}
+    - target: {fileID: 4162472679781091843, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
       propertyPath: cameraTransform
       value: 
-      objectReference: {fileID: 1769318329}
+      objectReference: {fileID: 599824393}
     - target: {fileID: 4162472679781091843, guid: 89f7ab862a7b24f4f9cf1a52f65bb8bb, type: 3}
       propertyPath: currentDodgeData
       value: 
@@ -1088,3 +1143,4 @@ SceneRoots:
   - {fileID: 626292861}
   - {fileID: 237939455}
   - {fileID: 809110833}
+  - {fileID: 599824393}
